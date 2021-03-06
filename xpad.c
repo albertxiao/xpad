@@ -87,8 +87,6 @@
 #define XTYPE_XBOX360W    2
 #define XTYPE_XBOXONE     3
 #define XTYPE_UNKNOWN     4
-#define CONFIG_JOYSTICK_XPAD_FF 1
-#define CONFIG_JOYSTICK_XPAD_LEDS 1
 
 static bool dpad_to_buttons;
 module_param(dpad_to_buttons, bool, S_IRUGO);
@@ -542,7 +540,7 @@ static const u8 xboxone_rumbleend_init[] = {
  * spin up to enough speed to actually vibrate the gamepad.
  */
 static const u8 xboxone_rumbletest_init[] = {
-	0x09, 0x00, 0x00, 0x09, 0x00, 0x0F, 0x00, 0x00,
+	0x09, 0x00, 0x00, 0x00, 0x09, 0x00, 0x0F, 0x00, 0x00,
 	0x1D, 0x1D, 0xFF, 0x00, 0x00
 };
 /*
