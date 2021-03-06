@@ -532,6 +532,16 @@ static const u8 xboxone_rumbleend_init[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+/* Manette de Jeux PGXONE
+ * A rumble packet with zero FF intensity will immediately
+ * terminate the rumbling required to init PowerA pads.
+ * This should happen fast enough that the motors don't
+ * spin up to enough speed to actually vibrate the gamepad.
+ */
+static const u8 xboxone_sogpgxone_init[] = {
+	0x09, 0x02, 0x20, 0x00, 0x01, 0x01, 0x00, 0xa0,
+	0x1D, 0x1D, 0xFF, 0x00, 0x00
+};
 /*
  * This specifies the selection of init packets that a gamepad
  * will be sent on init *and* the order in which they will be
@@ -552,6 +562,7 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumbleend_init),
 	XBOXONE_INIT_PKT(0x24c6, 0x542a, xboxone_rumbleend_init),
 	XBOXONE_INIT_PKT(0x24c6, 0x543a, xboxone_rumbleend_init),
+	XBOXONE_INIT_PKT(0x045e, 0x02d1, xboxone_sogpgxone_init),
 };
 
 struct xpad_output_packet {
@@ -603,13 +614,11 @@ struct usb_xpad {
 	int pad_nr;			/* the order x360 pads were attached */
 	const char *name;		/* name of the device */
 	struct work_struct work;	/* init/remove device from callback */
-	time64_t mode_btn_down_ts;
 };
 
 static int xpad_init_input(struct usb_xpad *xpad);
 static void xpad_deinit_input(struct usb_xpad *xpad);
 static void xpadone_ack_mode_report(struct usb_xpad *xpad, u8 seq_num);
-static void xpad360w_poweroff_controller(struct usb_xpad *xpad);
 
 /*
  *	xpad_process_packet
@@ -761,23 +770,6 @@ static void xpad360_process_packet(struct usb_xpad *xpad, struct input_dev *dev,
 	}
 
 	input_sync(dev);
-
-	/* XBOX360W controllers can't be turned off without driver assistance */
-	if (xpad->xtype == XTYPE_XBOX360W) {
-		if (xpad->mode_btn_down_ts > 0
-		&& xpad->pad_present
-		&& (ktime_get_seconds() - xpad->mode_btn_down_ts) >= 5) {
-			xpad360w_poweroff_controller(xpad);
-			xpad->mode_btn_down_ts = 0;
-			return;
-		}
-
-		/* mode button down/up */
-		if (data[3] & 0x04)
-			xpad->mode_btn_down_ts = ktime_get_seconds();
-		else
-			xpad->mode_btn_down_ts = 0;
-	}
 }
 
 static void xpad_presence_work(struct work_struct *work)
