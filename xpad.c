@@ -87,6 +87,8 @@
 #define XTYPE_XBOX360W    2
 #define XTYPE_XBOXONE     3
 #define XTYPE_UNKNOWN     4
+#define CONFIG_JOYSTICK_XPAD_FF 1
+#define CONFIG_JOYSTICK_XPAD_LEDS 1
 
 static bool dpad_to_buttons;
 module_param(dpad_to_buttons, bool, S_IRUGO);
@@ -1478,8 +1480,8 @@ static int xpad_led_probe(struct usb_xpad *xpad)
 	struct led_classdev *led_cdev;
 	int error;
 
-	// if (xpad->xtype != XTYPE_XBOX360 && xpad->xtype != XTYPE_XBOX360W)
-	// 	return 0;
+	if (xpad->xtype != XTYPE_XBOX360 && xpad->xtype != XTYPE_XBOX360W)
+		return 0;
 
 	xpad->led = led = kzalloc(sizeof(struct xpad_led), GFP_KERNEL);
 	if (!led)
