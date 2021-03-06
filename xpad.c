@@ -539,9 +539,10 @@ static const u8 xboxone_rumbleend_init[] = {
  * This should happen fast enough that the motors don't
  * spin up to enough speed to actually vibrate the gamepad.
  */
-static const u8 xboxone_sogpgxone_init[] = {
-	0x09, 0x02, 0x20, 0x00, 0x01, 0x01, 0x00, 0xa0,
-	0x1D, 0x1D, 0xFF, 0x00, 0x00
+static const u8 xboxone_rumbletest_init[] = {
+	0x09, 0x00, 0x00, 0x09, 0x00, 0x0F, 0x00, 0x00,
+	0x1D, 0x1D, 0xFF, 0x00, 0x00,
+	0x05, 0x20, 0x00, 0x0f, 0x06
 };
 /*
  * This specifies the selection of init packets that a gamepad
@@ -563,7 +564,7 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumbleend_init),
 	XBOXONE_INIT_PKT(0x24c6, 0x542a, xboxone_rumbleend_init),
 	XBOXONE_INIT_PKT(0x24c6, 0x543a, xboxone_rumbleend_init),
-	XBOXONE_INIT_PKT(0x045e, 0x02d1, xboxone_rumblebegin_init),
+	XBOXONE_INIT_PKT(0x045e, 0x02d1, xboxone_rumbletest_init),
 	XBOXONE_INIT_PKT(0x045e, 0x02d1, xboxone_rumbleend_init),
 };
 
