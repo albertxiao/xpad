@@ -563,7 +563,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumbleend_init),
 	XBOXONE_INIT_PKT(0x24c6, 0x542a, xboxone_rumbleend_init),
 	XBOXONE_INIT_PKT(0x24c6, 0x543a, xboxone_rumbleend_init),
-	XBOXONE_INIT_PKT(0x045e, 0x02d1, xboxone_sogpgxone_init),
+	XBOXONE_INIT_PKT(0x045e, 0x02d1, xboxone_rumblebegin_init),
+	XBOXONE_INIT_PKT(0x045e, 0x02d1, xboxone_rumbleend_init),
 };
 
 struct xpad_output_packet {
